@@ -77,7 +77,7 @@ struct CreditCardDetailView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            TransactionListView(show: $show)
+            TransactionListView(show: $show, card: card)
             
             VStack {
                 Image("\(card.image)").resizable().aspectRatio(contentMode: .fit )
@@ -151,6 +151,8 @@ let statusBarHeight: CGFloat = 44
 
 struct TransactionListView: View {
     @Binding var show:Bool
+    @State var showModal = false
+    @State var card: CreditCard
     var body: some View {
         VStack(alignment: .leading, spacing: 10.0) {
             Text("Latest Transactions").font(.system(size: 28, weight: .bold, design: .rounded)).frame(maxWidth: .infinity, alignment: .leading)
@@ -164,6 +166,10 @@ struct TransactionListView: View {
                     }
                     Spacer()
                     Text("\(t.amount)")
+                }.sheet(isPresented: $showModal) {
+                    TransactionDetailView(card:card)
+                }.onTapGesture {
+                    showModal = true
                 }
                 Divider()
             }
